@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strova Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5F2EC;
+    --black: #0D0D0D;
+    --accent: #C8A96E;
+    --muted: #6B6560;
+    --border: rgba(13,13,13,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background: rgba(245,242,236,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  nav ul a {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--black); }
+
+  .nav-cta {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--black) !important;
+    border: 0.5px solid var(--black);
+    padding: 0.55rem 1.4rem;
+    transition: background 0.2s, color 0.2s !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--black) !important;
+    color: var(--cream) !important;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rem 4rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    max-width: 800px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin-top: 2.5rem;
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.75;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-actions {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--black);
+    color: var(--cream);
+    padding: 1rem 2.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: #333; }
+
+  .btn-ghost {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--black); }
+
+  .hero-line {
+    position: absolute;
+    right: 4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.5px;
+    height: 45vh;
+    background: var(--border);
+  }
+
+  .hero-stat {
+    position: absolute;
+    right: 5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: right;
+  }
+
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--black);
+  }
+
+  .hero-stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
+  .marquee-wrap {
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 1rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-track {
+    display: inline-flex;
+    gap: 3rem;
+    animation: marquee 18s linear infinite;
+  }
+
+  .marquee-item {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .marquee-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .section {
+    padding: 8rem 4rem;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.15;
+    max-width: 600px;
+    margin-bottom: 4rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 0.5px solid var(--border);
+  }
+
+  .service-card {
+    padding: 3rem 2.5rem;
+    border-right: 0.5px solid var(--border);
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .service-card:last-child { border-right: none; }
+  .service-card:hover { background: rgba(13,13,13,0.03); }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+  }
+
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .work-card {
+    aspect-ratio: 4/3;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .work-card-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s ease;
+  }
+
+  .work-card:hover .work-card-bg { transform: scale(1.04); }
+
+  .w1 .work-card-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+  .w2 .work-card-bg { background: linear-gradient(135deg, #2d1b00 0%, #5a3800 50%, #8b5e00 100%); }
+  .w3 .work-card-bg { background: linear-gradient(135deg, #0d1f0d 0%, #1a3a1a 50%, #2d5a2d 100%); }
+  .w4 .work-card-bg { background: linear-gradient(135deg, #1f0d1a 0%, #3a1a33 50%, #5a2d50 100%); }
+
+  .work-card-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  }
+
+  .work-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .work-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #fff;
+  }
+
+  .process-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .process-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: start;
+  }
+
+  .process-item:first-child { border-top: 0.5px solid var(--border); }
+
+  .process-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .process-content h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+
+  .process-content p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 500px;
+  }
+
+  .cta-section {
+    background: var(--black);
+    color: var(--cream);
+    padding: 8rem 4rem;
+    text-align: center;
+  }
+
+  .cta-section .section-label { color: var(--accent); }
+
+  .cta-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 1rem 0 2rem;
+  }
+
+  .cta-section p {
+    color: rgba(245,242,236,0.5);
+    font-size: 0.95rem;
+    margin-bottom: 3rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+  }
+
+  .btn-cream {
+    background: var(--cream);
+    color: var(--black);
+    padding: 1rem 2.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-cream:hover { opacity: 0.85; }
+
+  footer {
+    padding: 3rem 4rem;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Strova<span>.</span></a>
+  <ul>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">Strova Studio — Digital Design</p>
+  <h1>Your business deserves a <em>better</em> first impression.</h1>
+  <p class="hero-sub">We build clean, high-converting landing pages for small businesses that are serious about their online presence.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Start a project</a>
+    <a href="#work" class="btn-ghost">View our work →</a>
+  </div>
+  <div class="hero-line"></div>
+  <div class="hero-stat">
+    <div class="hero-stat-num">48h</div>
+    <div class="hero-stat-label">Average delivery</div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Landing Pages <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Small Business <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Fast Delivery <span class="marquee-dot"></span></span>
+    <span class="marquee-item">High Converting <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Clean Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Dollar Pricing <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Landing Pages <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Small Business <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Fast Delivery <span class="marquee-dot"></span></span>
+    <span class="marquee-item">High Converting <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Clean Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Dollar Pricing <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<section class="section" id="services">
+  <p class="section-label reveal">What we do</p>
+  <h2 class="section-title reveal">Everything your business needs to convert online.</h2>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <p class="service-num">01</p>
+      <h3 class="service-name">Landing Page Design</h3>
+      <p class="service-desc">A focused, single-purpose page built to turn visitors into customers. Clean, fast, and designed around your offer.</p>
+    </div>
+    <div class="service-card">
+      <p class="service-num">02</p>
+      <h3 class="service-name">Conversion Copywriting</h3>
+      <p class="service-desc">Words that sell. We write every headline, subline, and call-to-action with one goal — getting people to act.</p>
+    </div>
+    <div class="service-card">
+      <p class="service-num">03</p>
+      <h3 class="service-name">Fast Turnaround</h3>
+      <p class="service-desc">Most projects delivered in 48 hours. No endless back and forth, no bloated timelines. We move fast and we get it right.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="work" style="padding-top: 0;">
+  <p class="section-label reveal">Selected work</p>
+  <h2 class="section-title reveal">Pages built to perform.</h2>
+  <div class="work-grid reveal">
+    <div class="work-card w1">
+      <div class="work-card-bg"></div>
+      <div class="work-card-content">
+        <p class="work-tag">Consulting</p>
+        <p class="work-name">Nexar Consulting Group</p>
+      </div>
+    </div>
+    <div class="work-card w2">
+      <div class="work-card-bg"></div>
+      <div class="work-card-content">
+        <p class="work-tag">E-commerce</p>
+        <p class="work-name">Aurelius Goods</p>
+      </div>
+    </div>
+    <div class="work-card w3">
+      <div class="work-card-bg"></div>
+      <div class="work-card-content">
+        <p class="work-tag">Real Estate</p>
+        <p class="work-name">Verdant Properties</p>
+      </div>
+    </div>
+    <div class="work-card w4">
+      <div class="work-card-bg"></div>
+      <div class="work-card-content">
+        <p class="work-tag">Fitness</p>
+        <p class="work-name">Forma Studio</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="process">
+  <p class="section-label reveal">How it works</p>
+  <h2 class="section-title reveal">Simple process, serious results.</h2>
+  <div class="process-list">
+    <div class="process-item reveal">
+      <div class="process-num">01</div>
+      <div class="process-content">
+        <h3>Discovery call</h3>
+        <p>We learn about your business, your offer, and who you're selling to. 20 minutes is all it takes.</p>
+      </div>
+    </div>
+    <div class="process-item reveal">
+      <div class="process-num">02</div>
+      <div class="process-content">
+        <h3>Design & copy</h3>
+        <p>We handle everything — layout, copy, visuals. You review and we refine until it's exactly right.</p>
+      </div>
+    </div>
+    <div class="process-item reveal">
+      <div class="process-num">03</div>
+      <div class="process-content">
+        <h3>Launch</h3>
+        <p>Your page goes live. Fast, clean, and ready to convert. Delivered in 48 hours or less.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <p class="section-label">Ready to grow?</p>
+  <h2>Let's build something that converts.</h2>
+  <p>We're selective about the projects we take on. If your business is serious, reach out and let's talk.</p>
+  <a href="mailto:hello@strovastudio.com" class="btn-cream">Get in touch</a>
+</section>
+
+<footer>
+  <p>© 2025 Strova Studio. All rights reserved.</p>
+  <p>hello@strovastudio.com</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
