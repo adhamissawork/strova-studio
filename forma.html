@@ -1,1 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forma Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0A0A0A;
+    --white: #F5F4F0;
+    --red: #C23B22;
+    --muted: #6B6B6B;
+    --border: rgba(245,244,240,0.12);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
 
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 5rem;
+    background: rgba(10,10,10,0.9); backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.15em; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--red); }
+  nav ul { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+  nav ul a { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  nav ul a:hover { color: var(--white); }
+  .nav-btn { border: 0.5px solid var(--red); color: var(--red) !important; padding: 0.5rem 1.3rem; transition: background 0.2s !important; }
+  .nav-btn:hover { background: var(--red) !important; color: var(--white) !important; }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 5rem 6rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: linear-gradient(160deg, #0a0a0a 0%, #1a0a05 50%, #2a1005 100%); }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(245,244,240,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(245,244,240,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-accent { position: absolute; right: 5rem; top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 20vw; color: rgba(194,59,34,0.06); line-height: 1; pointer-events: none; letter-spacing: -0.02em; }
+  .hero-content { position: relative; z-index: 1; opacity: 0; animation: fadeUp 0.8s 0.3s forwards; }
+  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4rem, 10vw, 9rem); line-height: 0.95; letter-spacing: 0.02em; }
+  .hero h1 span { color: var(--red); }
+  .hero-sub { margin-top: 2rem; font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 400px; }
+  .hero-actions { margin-top: 2.5rem; display: flex; gap: 1.5rem; align-items: center; }
+  .btn-red { background: var(--red); color: var(--white); padding: 0.9rem 2rem; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; border: none; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 0.2s; }
+  .btn-red:hover { opacity: 0.85; }
+  .btn-ghost { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .btn-ghost:hover { color: var(--white); }
+
+  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
+  .stat-item { padding: 2rem; border-right: 0.5px solid var(--border); text-align: center; }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; letter-spacing: 0.05em; color: var(--white); line-height: 1; }
+  .stat-label { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 0.4rem; }
+
+  .section { padding: 7rem 5rem; }
+  .section-label { font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--red); margin-bottom: 1rem; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1; letter-spacing: 0.03em; max-width: 600px; margin-bottom: 3rem; }
+
+  .programs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+  .program-card { background: var(--black); padding: 2.5rem 2rem; transition: background 0.3s; cursor: pointer; }
+  .program-card:hover { background: #111; }
+  .program-tag { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 1.25rem; }
+  .program-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+  .program-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .program-duration { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,244,240,0.3); }
+
+  .cta-section { padding: 7rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; border-top: 0.5px solid var(--border); }
+  .cta-left .section-title { margin-bottom: 1rem; }
+  .cta-left p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; max-width: 380px; margin-bottom: 2.5rem; }
+  .cta-right { display: flex; flex-direction: column; gap: 1px; background: var(--border); }
+  .offer-item { background: var(--black); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .offer-name { font-size: 0.9rem; font-weight: 500; }
+  .offer-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--red); letter-spacing: 0.05em; }
+
+  footer { padding: 2.5rem 5rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  footer p { font-size: 0.72rem; color: var(--muted); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Forma<span>.</span></a>
+  <ul>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-btn">Join now</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-accent">FORMA</div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Forma Studio — Premium Training</p>
+    <h1>BUILT TO<br><span>PERFORM.</span></h1>
+    <p class="hero-sub">Elite coaching and programming for people serious about their results. No fluff, no fads — just work that produces outcomes.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-red">Start today</a>
+      <a href="#programs" class="btn-ghost">View programs →</a>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Active members</div></div>
+  <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">Expert coaches</div></div>
+  <div class="stat-item"><div class="stat-num">4.8★</div><div class="stat-label">Average rating</div></div>
+  <div class="stat-item"><div class="stat-num">6yr</div><div class="stat-label">In operation</div></div>
+</div>
+
+<section class="section" id="programs">
+  <p class="section-label">What we offer</p>
+  <h2 class="section-title">Programs built around your goals.</h2>
+  <div class="programs-grid">
+    <div class="program-card">
+      <p class="program-tag">Strength</p>
+      <h3 class="program-name">Power Block</h3>
+      <p class="program-desc">A 12-week progressive overload program designed to build raw strength and muscle. Structured, tested, and proven.</p>
+      <p class="program-duration">12 weeks · 4 days/week</p>
+    </div>
+    <div class="program-card">
+      <p class="program-tag">Conditioning</p>
+      <h3 class="program-name">Forma Fit</h3>
+      <p class="program-desc">High-intensity conditioning that builds endurance, burns fat, and keeps you moving better than ever.</p>
+      <p class="program-duration">8 weeks · 5 days/week</p>
+    </div>
+    <div class="program-card">
+      <p class="program-tag">1-on-1</p>
+      <h3 class="program-name">Private Coaching</h3>
+      <p class="program-desc">Fully personalized programming and weekly check-ins with a dedicated coach. Maximum accountability, maximum results.</p>
+      <p class="program-duration">Ongoing · Custom schedule</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="pricing">
+  <div class="cta-left">
+    <p class="section-label">Pricing</p>
+    <h2 class="section-title">Invest in your performance.</h2>
+    <p>Simple, transparent pricing with no hidden fees. Cancel anytime. Results guaranteed or your first month back.</p>
+    <a href="#contact" class="btn-red">Get started</a>
+  </div>
+  <div class="cta-right" id="contact">
+    <div class="offer-item">
+      <span class="offer-name">Monthly membership</span>
+      <span class="offer-price">$79/mo</span>
+    </div>
+    <div class="offer-item">
+      <span class="offer-name">3-month block</span>
+      <span class="offer-price">$199</span>
+    </div>
+    <div class="offer-item">
+      <span class="offer-name">Private coaching</span>
+      <span class="offer-price">$299/mo</span>
+    </div>
+    <div class="offer-item">
+      <span class="offer-name">Annual plan</span>
+      <span class="offer-price">$599/yr</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Forma Studio. All rights reserved.</p>
+  <p>hello@formastudio.com</p>
+</footer>
+
+</body>
+</html>
