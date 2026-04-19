@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verdant Properties</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white: #FAFAF8;
+    --forest: #1B2E1F;
+    --sage: #4A6741;
+    --light-sage: #E8EDE6;
+    --muted: #7A8C7A;
+    --border: rgba(27,46,31,0.1);
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--forest); overflow-x: hidden; }
 
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 5rem;
+    background: rgba(250,250,248,0.92); backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .logo { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.05em; color: var(--forest); text-decoration: none; }
+  nav ul { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+  nav ul a { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  nav ul a:hover { color: var(--forest); }
+  .nav-btn { background: var(--forest); color: var(--white) !important; padding: 0.55rem 1.3rem; transition: opacity 0.2s !important; }
+  .nav-btn:hover { opacity: 0.85 !important; }
+
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 55% 45%; }
+  .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 8rem 4rem 6rem 5rem; }
+  .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--sage); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+  .hero h1 { font-family: 'Libre Baskerville', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 400; line-height: 1.2; opacity: 0; animation: fadeUp 0.8s 0.4s forwards; }
+  .hero h1 em { font-style: italic; color: var(--sage); }
+  .hero-sub { margin-top: 1.75rem; font-size: 0.95rem; color: var(--muted); line-height: 1.85; max-width: 380px; opacity: 0; animation: fadeUp 0.8s 0.6s forwards; }
+  .hero-actions { margin-top: 2.5rem; display: flex; gap: 1.5rem; align-items: center; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; }
+  .btn-forest { background: var(--forest); color: var(--white); padding: 0.9rem 2rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 0.2s; }
+  .btn-forest:hover { opacity: 0.85; }
+  .btn-ghost { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .btn-ghost:hover { color: var(--forest); }
+  .hero-stats { margin-top: 4rem; display: flex; gap: 3rem; padding-top: 2rem; border-top: 0.5px solid var(--border); opacity: 0; animation: fadeUp 0.8s 1s forwards; }
+  .hero-stat-num { font-family: 'Libre Baskerville', serif; font-size: 1.8rem; font-weight: 400; color: var(--forest); }
+  .hero-stat-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 0.25rem; }
+
+  .hero-right { background: var(--light-sage); display: grid; grid-template-rows: 1fr 1fr; gap: 1rem; padding: 7rem 2rem 2rem; }
+  .property-card { background: var(--white); position: relative; overflow: hidden; }
+  .property-bg { position: absolute; inset: 0; transition: transform 0.6s; }
+  .property-card:hover .property-bg { transform: scale(1.04); }
+  .pc1 .property-bg { background: linear-gradient(160deg, #0d1f0d 0%, #1a3a1a 60%, #2d5a2d 100%); }
+  .pc2 .property-bg { background: linear-gradient(160deg, #1a2a1a 0%, #2d4a2d 60%, #3d6a3d 100%); }
+  .property-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(transparent, rgba(11,30,11,0.75)); }
+  .property-type { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 0.3rem; }
+  .property-name { font-family: 'Libre Baskerville', serif; font-size: 1rem; color: #fff; font-weight: 400; }
+  .property-price { font-size: 0.8rem; color: rgba(255,255,255,0.75); margin-top: 0.2rem; }
+
+  .section { padding: 7rem 5rem; }
+  .section-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); margin-bottom: 1rem; }
+  .section-title { font-family: 'Libre Baskerville', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 400; line-height: 1.25; max-width: 520px; margin-bottom: 3rem; }
+
+  .listings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .listing-card { border: 0.5px solid var(--border); overflow: hidden; transition: transform 0.3s; cursor: pointer; }
+  .listing-card:hover { transform: translateY(-4px); }
+  .listing-img { aspect-ratio: 4/3; position: relative; overflow: hidden; }
+  .listing-bg { position: absolute; inset: 0; transition: transform 0.6s; }
+  .listing-card:hover .listing-bg { transform: scale(1.05); }
+  .l1 .listing-bg { background: linear-gradient(135deg, #1a3a1a 0%, #2d5a2d 100%); }
+  .l2 .listing-bg { background: linear-gradient(135deg, #0d2a0d 0%, #1a4a1a 100%); }
+  .l3 .listing-bg { background: linear-gradient(135deg, #2a3a1a 0%, #4a5a2d 100%); }
+  .listing-tag { position: absolute; top: 1rem; left: 1rem; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; background: var(--sage); color: #fff; padding: 0.3rem 0.7rem; }
+  .listing-info { padding: 1.25rem; }
+  .listing-location { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+  .listing-name { font-family: 'Libre Baskerville', serif; font-size: 1.05rem; font-weight: 400; margin-bottom: 0.4rem; }
+  .listing-price { font-size: 0.9rem; color: var(--sage); font-weight: 500; }
+
+  .process-section { background: var(--forest); color: var(--white); padding: 7rem 5rem; }
+  .process-section .section-label { color: #6B8F6B; }
+  .process-section .section-title { color: var(--white); }
+  .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 0.5px solid rgba(255,255,255,0.1); }
+  .process-card { padding: 2.5rem 2rem; border-right: 0.5px solid rgba(255,255,255,0.1); }
+  .process-card:last-child { border-right: none; }
+  .process-num { font-family: 'Libre Baskerville', serif; font-size: 0.85rem; color: #6B8F6B; margin-bottom: 1.5rem; font-style: italic; }
+  .process-name { font-size: 1rem; font-weight: 500; margin-bottom: 0.75rem; color: var(--white); }
+  .process-desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.8; }
+
+  .cta-section { padding: 7rem 5rem; text-align: center; background: var(--light-sage); }
+  .cta-section .section-title { margin: 1rem auto 1.5rem; }
+  .cta-section p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; max-width: 380px; margin: 0 auto 2.5rem; }
+
+  footer { padding: 2.5rem 5rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--white); }
+  footer p { font-size: 0.72rem; color: var(--muted); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Verdant Properties</a>
+  <ul>
+    <li><a href="#listings">Listings</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-btn">Book a viewing</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Verdant Properties — Est. 2017</p>
+    <h1>Find a home that feels like <em>yours</em> from the first moment.</h1>
+    <p class="hero-sub">We specialize in premium residential properties across the Pacific Northwest. Honest guidance, exceptional results.</p>
+    <div class="hero-actions">
+      <a href="#listings" class="btn-forest">View listings</a>
+      <a href="#process" class="btn-ghost">How it works →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">340+</div>
+        <div class="hero-stat-label">Homes sold</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">98%</div>
+        <div class="hero-stat-label">Client satisfaction</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">8yr</div>
+        <div class="hero-stat-label">In the market</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="property-card pc1">
+      <div class="property-bg"></div>
+      <div class="property-info">
+        <p class="property-type">Featured listing</p>
+        <p class="property-name">The Ashford Estate</p>
+        <p class="property-price">$1,250,000</p>
+      </div>
+    </div>
+    <div class="property-card pc2">
+      <div class="property-bg"></div>
+      <div class="property-info">
+        <p class="property-type">Just listed</p>
+        <p class="property-name">Maplewood Residence</p>
+        <p class="property-price">$875,000</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="listings">
+  <p class="section-label">Current listings</p>
+  <h2 class="section-title">Properties worth coming home to.</h2>
+  <div class="listings-grid">
+    <div class="listing-card l1">
+      <div class="listing-img">
+        <div class="listing-bg"></div>
+        <span class="listing-tag">For Sale</span>
+      </div>
+      <div class="listing-info">
+        <p class="listing-location">Portland, OR</p>
+        <p class="listing-name">The Cedarwood House</p>
+        <p class="listing-price">$695,000</p>
+      </div>
+    </div>
+    <div class="listing-card l2">
+      <div class="listing-img">
+        <div class="listing-bg"></div>
+        <span class="listing-tag">Under Offer</span>
+      </div>
+      <div class="listing-info">
+        <p class="listing-location">Seattle, WA</p>
+        <p class="listing-name">Lakeview Modern</p>
+        <p class="listing-price">$1,100,000</p>
+      </div>
+    </div>
+    <div class="listing-card l3">
+      <div class="listing-img">
+        <div class="listing-bg"></div>
+        <span class="listing-tag">New</span>
+      </div>
+      <div class="listing-info">
+        <p class="listing-location">Eugene, OR</p>
+        <p class="listing-name">The Birch Retreat</p>
+        <p class="listing-price">$540,000</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process-section" id="process">
+  <p class="section-label">How it works</p>
+  <h2 class="section-title" style="margin-bottom: 3rem;">Buying or selling, we make it simple.</h2>
+  <div class="process-grid">
+    <div class="process-card">
+      <p class="process-num">One</p>
+      <p class="process-name">Consultation</p>
+      <p class="process-desc">We sit down and understand exactly what you need, your budget, and your timeline.</p>
+    </div>
+    <div class="process-card">
+      <p class="process-num">Two</p>
+      <p class="process-name">Property Match</p>
+      <p class="process-desc">We handpick listings that fit your criteria — no wasted viewings, no fluff.</p>
+    </div>
+    <div class="process-card">
+      <p class="process-num">Three</p>
+      <p class="process-name">Negotiation</p>
+      <p class="process-desc">We handle the offers, counteroffers, and contracts so you get the best possible deal.</p>
+    </div>
+    <div class="process-card">
+      <p class="process-num">Four</p>
+      <p class="process-name">Close & Move</p>
+      <p class="process-desc">We walk you through closing day and make sure you're settled and happy in your new home.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <p class="section-label">Get started</p>
+  <h2 class="section-title">Your next home is closer than you think.</h2>
+  <p>Book a free consultation and let us do the heavy lifting. No pressure, no commitment.</p>
+  <a href="mailto:hello@verdantproperties.com" class="btn-forest">Book a consultation</a>
+</section>
+
+<footer>
+  <p>© 2025 Verdant Properties. All rights reserved.</p>
+  <p>hello@verdantproperties.com</p>
+</footer>
+
+</body>
+</html>
